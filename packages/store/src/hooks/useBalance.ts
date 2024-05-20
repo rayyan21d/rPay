@@ -1,9 +1,9 @@
 import { balanceAtom } from '../atoms/balance';
-import { useRecoilState } from 'recoil';
+import {useRecoilValue } from 'recoil';
 
 export const useBalance = ()=>{
 
-    const [value, setValue] = useRecoilState(balanceAtom);
+    const value = useRecoilValue(balanceAtom);
     return value;
 
 }

@@ -19,27 +19,16 @@ model User {
   name              String?
   number            String              @unique
   password          String
-  onRampTransaction OnRampTransaction[]
+  OnRampTransaction OnRampTransaction[]
   Balance           Balance[]
 }
 
-enum AuthType {
-  Google
-  Email
-  Github
-}
-
 model Merchant {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  auth_type AuthType
-}
-
-enum OnRampStatus {
-  Success
-  Failure
-  Processing
+  id          Int     @id @default(autoincrement())
+  email       String  @unique
+  name        String?
+  auth_type   AuthType
+  password    String  
 }
 
 model OnRampTransaction {
@@ -59,4 +48,17 @@ model Balance {
   amount Int
   locked Int
   user   User @relation(fields: [userId], references: [id])
+}
+
+enum AuthType {
+  Google
+  Github
+  Email
+}
+
+
+enum OnRampStatus {
+  Success
+  Failure
+  Processing
 }

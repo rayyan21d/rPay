@@ -1,14 +1,12 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import Credentials from "next-auth/providers/credentials";
-
 import db from "@repo/db/client";
 import {z} from "zod";
 import bcrypt from "bcrypt";
 
 const SignUpSchema = z.object({ 
     phone: z.string().min(10).max(10),
-    password: z.string().min(6).max(16)
+    password: z.string()
 });
 
 export const authOptions = {
@@ -16,18 +14,20 @@ export const authOptions = {
         CredentialsProvider({
             name: "Phone number",
             credentials:{
-                phone:{ label: "Phone", type: "text", placeholder: "Phone" },
+                username:{ label: "Username", type: "text", placeholder: "Username", required: true},
+                phone:{ label: "Phone", type: "text", placeholder: "Phone", required: true },
                 password:{ label: "Password", type: "password", placeholder: "Password", required: true}
             },
-            async authorize(credentials:{
-                
-                csrfToken: string,
-                phone: string,
-                password: string
-               
-            }){
+            async authorize(credentials:any){
                 // zod validation logic
-                console.log(credentials);
+                console.log("Credentials", credentials);
+                try{
+                    SignUpSchema.parse(credentials);
+
+                }catch(e){
+                    console.log(e)
+                    return null;
+                }
 
                
                 const existingUser = await db.user.findFirst({
@@ -36,7 +36,7 @@ export const authOptions = {
                     }
                 })
 
-                console.log(existingUser)
+                console.log("existingUser", existingUser)
 
                 if(existingUser){
 
@@ -47,15 +47,15 @@ export const authOptions = {
                         return {
                             id: existingUser.id.toString(),
                             name: existingUser.name,
-                            email: existingUser.email
+                            phone: existingUser.number
                         }
                     
+                    }else{
+                        // you cannot return a custom error message
+                        return null
                     }
 
-                    return {
-                        message: "Password is incorrect"
-                    }
-                    
+                  
                 }
             
                try{
@@ -63,6 +63,7 @@ export const authOptions = {
                     const hashedPassword = await bcrypt.hash(credentials.password, 10);
                     const user = await db.user.create({
                         data:{
+                            name: credentials.username,
                             number: credentials.phone,
                             password : hashedPassword
                         }
@@ -77,9 +78,7 @@ export const authOptions = {
                     console.log(e)
                }
                
-               return {
-                    message: "Auth failed"
-                }
+               return null
             }
         }),
 

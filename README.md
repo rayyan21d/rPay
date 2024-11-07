@@ -1,6 +1,16 @@
-# Turborepo starter
+# rPay: A Centralized Payment System
 
-This is an official starter Turborepo.
+## Description
+
+This is a centralized payment system that allows users to make payments to merchants. It's architected as a monorepo using Turbo.
+
+The system is made up of three main components:
+
+- **User App**: This is the user facing application that allows users to make payments to merchants.
+
+- **Merchant App**: This is the merchant facing application that allows merchants to receive payments from users.
+
+- **Bank Webhook Handler**: This is a webhook handler that listens for payment events from the bank and updates the payment status in the database.
 
 ## Using this example
 
@@ -16,9 +26,9 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `user`: a user facing [Next.js](https://nextjs.org/) app
+- `merchant`: a merchant facing [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `user` and `merchant` applications
 - `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
